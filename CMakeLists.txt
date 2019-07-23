@@ -1,11 +1,28 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++17)
 
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 project(camera_fusion)
+
+set(YOLOV3_WEIGHTS_URL "https://pjreddie.com/media/files/yolov3.weights")
+set(YOLOV3_WEIGHTS_PATH "../dat/yolo/yolov3.weights")
+set(YOLOV3_TINY_WEIGHTS_URL "https://pjreddie.com/media/files/yolov3-tiny.weights")
+set(YOLOV3_TINY_WEIGHTS_PATH "../dat/yolo/yolov3-tiny.weights")
+
+if (NOT EXISTS "${YOLOV3_WEIGHTS_PATH}")
+	execute_process(COMMAND echo -e "Downloading yolov3.weights from ${YOLOV3_WEIGHTS_URL}."
+	                                "\nIt may take a significant amount of time.")
+    file(DOWNLOAD "${YOLOV3_WEIGHTS_URL}" "${YOLOV3_WEIGHTS_PATH}")
+endif()
+
+if (NOT EXISTS "${YOLOV3_TINY_WEIGHTS_PATH}")
+	execute_process(COMMAND echo "Downloading yolov3-tiny.weights from ${YOLOV3_TINY_WEIGHTS_URL}."
+                                     "\nIt may take a significant amount of time.")
+    file(DOWNLOAD "${YOLOV3_TINY_WEIGHTS_URL}" "${YOLOV3_TINY_WEIGHTS_PATH}")
+endif()
 
 find_package(OpenCV 4.1 REQUIRED)
 

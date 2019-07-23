@@ -14,6 +14,7 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
+#include "CircularBuffer.hpp"
 #include "dataStructures.h"
 #include "matching2D.hpp"
 #include "objectDetection2D.hpp"
@@ -70,8 +71,8 @@ int main(int argc, const char *argv[])
 
     // misc
     double sensorFrameRate = 10.0 / imgStepWidth; // frames per second for Lidar and camera
-    int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
-    vector<DataFrame> dataBuffer; // list of data frames which are held in memory at the same time
+    const int dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
+    CircularBuffer<DataFrame, dataBufferSize> dataBuffer; // list of data frames which are held in memory at the same time
     bool bVis = false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
