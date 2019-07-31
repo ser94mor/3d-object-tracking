@@ -175,7 +175,7 @@ void matchBoundingBoxes(std::vector<cv::DMatch> &matches, std::map<int, int> &bb
 
     // 2D array storing the number of matched keypoints belonging
     // to the given bounding boxes from the previous frame and the current frame;
-    // all elements are initialized to zeros according to C++ rules
+    // all elements are initialized to zero here
     std::vector<std::vector<size_t>> cntKptsInMatchedBB(prevBBSize, std::vector<size_t>(currBBSize, 0ull));
 
     // matches array contains all the matched keypoints between the previous and current frames
