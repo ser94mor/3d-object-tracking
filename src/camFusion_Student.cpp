@@ -148,7 +148,36 @@ void computeTTCCamera(std::vector<cv::KeyPoint> &kptsPrev, std::vector<cv::KeyPo
 void computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev,
                      std::vector<LidarPoint> &lidarPointsCurr, double frameRate, double &TTC)
 {
-    // ...
+    // make a min-heap out of lidar points in-place with respect to the X coordinate;
+    // we want to extract K minimum elements from arrays of lidar points to compute statistically
+    // reliable distance to the preceding vehicle;
+    // we can achieve O(N + K*log(N)) time complexity with the heap in comparison to sorting (O(N*log(N))),
+    // where N is the number of lidar points and K << N (significantly less than)
+
+    const size_t K = 13;
+    const size_t P = 5;
+    assert (K <= lidarPointsPrev.size() and K <= lidarPointsCurr.size());
+
+    // we use > with respect to x coordinate because std::make_heap makes a max heap w.r.t. less operator
+    auto cmpFunc = [](const LidarPoint& lp1, const LidarPoint& lp2) { return lp1.x > lp2.x; };
+
+    std::make_heap(lidarPointsPrev.begin(), lidarPointsPrev.end(), cmpFunc);
+    // the first K elements in the array will be the K minimum distance elements w.r.t. X coordinates
+    // sorted in the descending order, that is, the Kth closes element will be the first one and the closest one
+    // will be on the Kth position (index K-1)
+    std::sort_heap(lidarPointsPrev.begin(), lidarPointsPrev.begin()+K, cmpFunc);
+
+    std::make_heap(lidarPointsCurr.begin(), lidarPointsCurr.end(), cmpFunc);
+    std::sort_heap(lidarPointsCurr.begin(), lidarPointsCurr.begin()+K, cmpFunc);
+
+    // take average of (K-P)th to Kth point to compute the distance to the preceding vehicle
+    auto sumOp = [](const double sum, const LidarPoint& lp) { return sum + lp.x; };
+    double prevMeanX = std::accumulate(lidarPointsPrev.begin(), lidarPointsPrev.begin()+K, 0.0, sumOp) / P;
+    double currMeanX = std::accumulate(lidarPointsCurr.begin(), lidarPointsCurr.begin()+K, 0.0, sumOp) / P;
+
+    // compute TTC in accordance with the constant velocity motion model
+    double T = 1.0 / frameRate;
+    TTC = currMeanX * T / (prevMeanX - currMeanX);
 }
 
 static std::vector<size_t>

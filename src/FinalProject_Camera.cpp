@@ -84,9 +84,7 @@ int main(int, const char*[])
         // assemble filenames for current index
         ostringstream imgNumber;
         imgNumber << setfill('0') << setw(imgFillWidth) << imgStartIndex + imgIndex;
-        ostringstream imgFullFilenameStream;
-        imgFullFilenameStream << imgBasePath << imgPrefix << imgNumber.str() << imgFileType << std::endl;
-        string imgFullFilename = imgFullFilenameStream.str();
+        string imgFullFilename = imgBasePath + imgPrefix + imgNumber.str() + imgFileType;
 
         // load image from file 
         cv::Mat img = cv::imread(imgFullFilename);
@@ -254,11 +252,9 @@ int main(int, const char*[])
                 // compute TTC for current match
                 if( currBB->lidarPoints.size()>0 && prevBB->lidarPoints.size()>0 ) // only compute TTC if we have Lidar points
                 {
-                    //// STUDENT ASSIGNMENT
-                    //// TASK FP.2 -> compute time-to-collision based on Lidar data (implement -> computeTTCLidar)
+                    // compute time-to-collision based on Lidar data
                     double ttcLidar; 
                     computeTTCLidar(prevBB->lidarPoints, currBB->lidarPoints, sensorFrameRate, ttcLidar);
-                    //// EOF STUDENT ASSIGNMENT
 
                     //// STUDENT ASSIGNMENT
                     //// TASK FP.3 -> assign enclosed keypoint matches to bounding box (implement -> clusterKptMatchesWithROI)
