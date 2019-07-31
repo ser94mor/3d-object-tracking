@@ -112,7 +112,7 @@ void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, 
     // plot distance markers
     float lineSpacing = 2.0; // gap between distance markers
     int nMarkers = floor(worldSize.height / lineSpacing);
-    for (size_t i = 0; i < nMarkers; ++i)
+    for (int i = 0; i < nMarkers; ++i)
     {
         int y = (-(i * lineSpacing) * imageSize.height / worldSize.height) + imageSize.height;
         cv::line(topviewImg, cv::Point(0, y), cv::Point(imageSize.width, y), cv::Scalar(255, 0, 0));
@@ -151,8 +151,107 @@ void computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev,
     // ...
 }
 
-
-void matchBoundingBoxes(std::vector<cv::DMatch> &matches, std::map<int, int> &bbBestMatches, DataFrame &prevFrame, DataFrame &currFrame)
+static std::vector<size_t>
+findBoundingBoxesContainingKeypoint(const cv::KeyPoint &kpt, const std::vector<BoundingBox> &bounding_boxes)
 {
-    // ...
+    std::vector<size_t> filtered_bounding_boxes;
+    for (size_t i = 0; i < bounding_boxes.size(); ++i)
+    {
+        if (bounding_boxes[i].roi.contains(kpt.pt))
+        {
+            filtered_bounding_boxes.push_back(i);
+        }
+    }
+
+    return filtered_bounding_boxes;
+}
+
+
+void matchBoundingBoxes(std::vector<cv::DMatch> &matches, std::map<int, int> &bbBestMatches,
+                        DataFrame &prevFrame, DataFrame &currFrame)
+{
+    const size_t prevBBSize = prevFrame.boundingBoxes.size();
+    const size_t currBBSize = currFrame.boundingBoxes.size();
+
+    // 2D array storing the number of matched keypoints belonging
+    // to the given bounding boxes from the previous frame and the current frame;
+    // all elements are initialized to zeros according to C++ rules
+    std::vector<std::vector<size_t>> cntKptsInMatchedBB(prevBBSize, std::vector<size_t>(currBBSize, 0ull));
+
+    // matches array contains all the matched keypoints between the previous and current frames
+    for (const auto& match : matches)
+    {
+        // extract the keypoints for the corresponding match
+        const auto& prevKpt = prevFrame.keypoints[match.queryIdx];
+        const auto& currKpt = currFrame.keypoints[match.trainIdx];
+
+        // find bounding boxes in the previous frame to which the given prevKpt belongs to
+        const auto prevBoxIDs = findBoundingBoxesContainingKeypoint(prevKpt, prevFrame.boundingBoxes);
+        const auto currBoxIDs = findBoundingBoxesContainingKeypoint(currKpt, currFrame.boundingBoxes);
+
+        // update the number of matched keypoints from previous and current frames in the cntKptsInMatchedBB
+        for (auto prevBBID : prevBoxIDs)
+        {
+            for (auto currBBID : currBoxIDs)
+            {
+                ++cntKptsInMatchedBB[prevBBID][currBBID];
+            }
+        }
+    }
+
+    // search for the maximum number of matches within bounding boxes;
+    // there are no more correspondences between bounding boxes of previous and current frames than the minimum
+    // number of bounding boxes among those frames;
+    // since there should be no big difference in the number of identified bounding boxes in the previous
+    // and current frames, we extract indices of maximum elements for both cases
+    std::vector<size_t> max_prev_indices(currBBSize, 0ull);   // all elements are initialized to zero here
+    std::vector<size_t> max_curr_indices(prevBBSize, 0ull);   //
+
+    for (size_t prev_ind = 0; prev_ind < prevBBSize; ++prev_ind)
+    {
+        for (size_t curr_ind = 0; curr_ind < currBBSize; ++curr_ind)
+        {
+            max_prev_indices[curr_ind] =
+                    cntKptsInMatchedBB[prev_ind][curr_ind] > cntKptsInMatchedBB[max_prev_indices[curr_ind]][curr_ind]
+                    ? prev_ind : max_prev_indices[curr_ind];
+
+            max_curr_indices[prev_ind] =
+                    cntKptsInMatchedBB[prev_ind][curr_ind] > cntKptsInMatchedBB[prev_ind][max_curr_indices[prev_ind]]
+                    ? curr_ind : max_curr_indices[prev_ind];
+        }
+    }
+
+    // fill in the bbBestMatches based on the minimum number of bounding boxes because otherwise there might be
+    // that one BB corresponds to two or more other
+    if (prevBBSize <= currBBSize)
+    {
+        for (size_t curr_ind = 0; curr_ind < currBBSize; ++curr_ind)
+        {
+            auto prevBoxID = prevFrame.boundingBoxes[max_prev_indices[curr_ind]].boxID;
+            auto currBoxID = currFrame.boundingBoxes[curr_ind].boxID;
+
+            bbBestMatches[prevBoxID] = currBoxID;
+
+            // the logic of this project assumes that the following asserts are true;
+            // it may not be true if similar logic is applied in some other project
+            assert (static_cast<size_t>(prevBoxID) == max_prev_indices[curr_ind]);
+            assert (static_cast<size_t>(currBoxID) == curr_ind);
+        }
+    }
+    else
+    {
+        for (size_t prev_ind = 0; prev_ind < prevBBSize; ++prev_ind)
+        {
+            auto prevBoxID = prevFrame.boundingBoxes[prev_ind].boxID;
+            auto currBoxID = currFrame.boundingBoxes[max_curr_indices[prev_ind]].boxID;
+
+            bbBestMatches[prevBoxID] = currBoxID;
+
+            // the logic of this project assumes that the following asserts are true;
+            // it may not be true if similar logic is applied in some other project
+            assert (static_cast<size_t>(prevBoxID) == prev_ind);
+            assert (static_cast<size_t>(currBoxID) == max_curr_indices[prev_ind]);
+        }
+    }
+
 }
