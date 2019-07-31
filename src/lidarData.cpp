@@ -43,7 +43,7 @@ void loadLidarFromFile(vector<LidarPoint> &lidarPoints, string filename)
     stream = fopen (filename.c_str(),"rb");
     num = fread(data,sizeof(float),num,stream)/4;
  
-    for (int32_t i=0; i<num; i++) {
+    for (auto i=0ul; i<num; i++) {
         LidarPoint lpt;
         lpt.x = *px; lpt.y = *py; lpt.z = *pz; lpt.r = *pr;
         lidarPoints.push_back(lpt);
@@ -73,7 +73,7 @@ void showLidarTopview(std::vector<LidarPoint> &lidarPoints, cv::Size worldSize, 
     // plot distance markers
     float lineSpacing = 2.0; // gap between distance markers
     int nMarkers = floor(worldSize.height / lineSpacing);
-    for (size_t i = 0; i < nMarkers; ++i)
+    for (int i = 0; i < nMarkers; ++i)
     {
         int y = (-(i * lineSpacing) * imageSize.height / worldSize.height) + imageSize.height;
         cv::line(topviewImg, cv::Point(0, y), cv::Point(imageSize.width, y), cv::Scalar(255, 0, 0));
