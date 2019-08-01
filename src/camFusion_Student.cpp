@@ -2,6 +2,9 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
+#include <set>
+#include <iterator>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -129,21 +132,68 @@ void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, 
     }
 }
 
-
 // associate a given bounding box with the keypoints it contains
 void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint> &kptsPrev,
                               std::vector<cv::KeyPoint> &kptsCurr, std::vector<cv::DMatch> &kptMatches)
 {
+    double filterOutliersRatio = 0.2; // remove 20% of the most high valued distances
+    std::multiset<double> euclideanDistances;
+
+    // calculate Euclidean distances between keypoints
     for (const auto& match : kptMatches)
     {
-        const auto& kpt = kptsCurr[match.trainIdx];
+        const auto &currKpt = kptsCurr[match.trainIdx];
 
-        if (boundingBox.roi.contains(kpt.pt))
+        if (boundingBox.roi.contains(currKpt.pt))
         {
-            boundingBox.keypoints.push_back(kpt);
-            boundingBox.kptMatches.push_back(match);
+            const auto &prevKpt = kptsPrev[match.queryIdx];
+            const double dx = currKpt.pt.x - prevKpt.pt.x;
+            const double dy = currKpt.pt.y - prevKpt.pt.y;
+
+            euclideanDistances.emplace(std::sqrt(dx*dx + dy*dy));
         }
     }
+    const double euclideanDistanceMean =
+            std::accumulate(euclideanDistances.begin(), euclideanDistances.end(), 0.0) / euclideanDistances.size();
+    const double euclideanDistanceStandardDeviation = std::sqrt(
+            std::accumulate(euclideanDistances.begin(), euclideanDistances.end(), 0.0,
+                            [&euclideanDistanceMean](const double sum, const double dist)
+                            {
+                                double deviation = dist - euclideanDistanceMean;
+                                return sum + deviation * deviation;
+                            }) / euclideanDistances.size());
+
+    auto r_offset = static_cast<size_t>(round(filterOutliersRatio * euclideanDistances.size()));
+    auto it = euclideanDistances.crend();
+    std::advance(it, r_offset);
+    double filterKptsWithDistHigherThan = *it;
+
+    for (const auto& match : kptMatches)
+    {
+        const auto& currKpt = kptsCurr[match.trainIdx];
+
+        if (boundingBox.roi.contains(currKpt.pt))
+        {
+            const auto& prevKpt = kptsPrev[match.queryIdx];
+            const double dx = currKpt.pt.x - prevKpt.pt.x;
+            const double dy = currKpt.pt.y - prevKpt.pt.y;
+            const double euclideanDistance = std::sqrt(dx*dx + dy*dy);
+            //if ((euclideanDistanceMean - euclideanDistanceStandardDeviation) <= euclideanDistance and
+            //    euclideanDistance <= (euclideanDistanceMean + euclideanDistanceStandardDeviation))
+            if (euclideanDistance <= filterKptsWithDistHigherThan)
+            {
+                boundingBox.keypoints.push_back(currKpt);
+                boundingBox.kptMatches.push_back(match);
+            }
+        }
+    }
+
+    std::cout << "[clusterKptMatchesWithROI]: points in ROI for BB "
+              << boundingBox.boxID << " before filtering: " << euclideanDistances.size()
+              << "; after filtering: " << boundingBox.keypoints.size()
+              << "; Euclidean Distance Mean: " << euclideanDistanceMean
+              << "; Euclidean distance standard deviation: " << euclideanDistanceStandardDeviation
+              << std::endl;
 }
 
 
