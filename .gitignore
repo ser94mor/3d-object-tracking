@@ -1,3 +1,4 @@
 *.weights
 cmake-build-debug/
 .idea/
+.ipynb_checkpoints/
