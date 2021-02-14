@@ -32,11 +32,11 @@ void clusterLidarWithROI(std::vector<BoundingBox> &boundingBoxes, std::vector<Li
         // project Lidar point into camera
         Y = P_rect_xx * R_rect_xx * RT * X;
         cv::Point pt;
-        pt.x = Y.at<double>(0, 0) / Y.at<double>(0, 2); // pixel coordinates
-        pt.y = Y.at<double>(1, 0) / Y.at<double>(0, 2);
+        pt.x = Y.at<double>(0, 0) / Y.at<double>(2, 0); // pixel coordinates
+        pt.y = Y.at<double>(1, 0) / Y.at<double>(2, 0);
 
         vector<vector<BoundingBox>::iterator> enclosingBoxes; // pointers to all bounding boxes which enclose the current Lidar point
-        for (vector<BoundingBox>::iterator it2 = boundingBoxes.begin(); it2 != boundingBoxes.end(); ++it2)
+        for (auto it2 = boundingBoxes.begin(); it2 != boundingBoxes.end(); ++it2)
         {
             // shrink current bounding box slightly to avoid having too many outlier points around the edges
             cv::Rect smallerBox;
@@ -64,32 +64,38 @@ void clusterLidarWithROI(std::vector<BoundingBox> &boundingBoxes, std::vector<Li
 }
 
 
-void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait)
+/*
+ * The show3DObjects() function below can handle different output image sizes, but the text output has been manually
+ * tuned to fit the 2000x2000 size. However, you can make this function work for other sizes too.
+ * For instance, to use a 1000x1000 size, adjusting the text positions by dividing them by 2.
+ */
+void show3DObjects(
+const std::vector<BoundingBox>& boundingBoxes, const cv::Size& worldSize, const cv::Size& imageSize, const bool bWait)
 {
     // create topview image
     cv::Mat topviewImg(imageSize, CV_8UC3, cv::Scalar(255, 255, 255));
 
-    for(auto it1=boundingBoxes.begin(); it1!=boundingBoxes.end(); ++it1)
+    for( const auto& boundingBox : boundingBoxes )
     {
         // create randomized color for current 3D object
-        cv::RNG rng(it1->boxID);
+        cv::RNG rng(boundingBox.boxID);
         cv::Scalar currColor = cv::Scalar(rng.uniform(0,150), rng.uniform(0, 150), rng.uniform(0, 150));
 
         // plot Lidar points into top view image
         int top=1e8, left=1e8, bottom=0.0, right=0.0; 
         float xwmin=1e8, ywmin=1e8, ywmax=-1e8;
-        for (auto it2 = it1->lidarPoints.begin(); it2 != it1->lidarPoints.end(); ++it2)
+        for (const auto& lidarPoint : boundingBox.lidarPoints)
         {
             // world coordinates
-            float xw = (*it2).x; // world position in m with x facing forward from sensor
-            float yw = (*it2).y; // world position in m with y facing left from sensor
+            auto xw = static_cast<float>(lidarPoint.x); // world position in m with x facing forward from sensor
+            auto yw = static_cast<float>(lidarPoint.y); // world position in m with y facing left from sensor
             xwmin = xwmin<xw ? xwmin : xw;
             ywmin = ywmin<yw ? ywmin : yw;
             ywmax = ywmax>yw ? ywmax : yw;
 
             // top-view coordinates
-            int y = (-xw * imageSize.height / worldSize.height) + imageSize.height;
-            int x = (-yw * imageSize.width / worldSize.width) + imageSize.width / 2;
+            int y = static_cast<int>(-xw * imageSize.height / worldSize.height) + imageSize.height;
+            int x = static_cast<int>(-yw * imageSize.width  / worldSize.width)  + imageSize.width / 2;
 
             // find enclosing rectangle
             top = top<y ? top : y;
@@ -106,7 +112,7 @@ void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, 
 
         // augment object with some key data
         char str1[200], str2[200];
-        sprintf(str1, "id=%d, #pts=%d", it1->boxID, (int)it1->lidarPoints.size());
+        sprintf(str1, "id=%d, #pts=%d", boundingBox.boxID, (int)boundingBox.lidarPoints.size());
         putText(topviewImg, str1, cv::Point2f(left-250, bottom+50), cv::FONT_ITALIC, 2, currColor);
         sprintf(str2, "xmin=%2.2f m, yw=%2.2f m", xwmin, ywmax-ywmin);
         putText(topviewImg, str2, cv::Point2f(left-250, bottom+125), cv::FONT_ITALIC, 2, currColor);  
@@ -117,7 +123,8 @@ void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, 
     int nMarkers = floor(worldSize.height / lineSpacing);
     for (int i = 0; i < nMarkers; ++i)
     {
-        int y = (-(i * lineSpacing) * imageSize.height / worldSize.height) + imageSize.height;
+        int y = static_cast<int>(-(static_cast<float>(i) * lineSpacing) * imageSize.height / worldSize.height)
+                + imageSize.height;
         cv::line(topviewImg, cv::Point(0, y), cv::Point(imageSize.width, y), cv::Scalar(255, 0, 0));
     }
 
