@@ -1,5 +1,10 @@
 *.weights
+cmake-build/
 cmake-build-debug/
+cmake-build-minsizerel/
+cmake-build-release/
+cmake-build-relwithdebinfo/
 .idea/
 .ipynb_checkpoints/
 build/
+docker/docker-image.tar.xz
