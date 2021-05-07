@@ -16,6 +16,7 @@ RUN mkdir opencv-4.1.0/build && \
     cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.1.0/modules \
           -DBUILD_STATIC_LIBS=ON \
           -DBUILD_SHARED_LIBS=OFF \
+          -DOPENCV_ENABLE_NONFREE=ON \
           .. && \
     make -j$(nproc --ignore 1) && \
     make install && \

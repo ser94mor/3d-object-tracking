@@ -106,6 +106,9 @@ int main(int, const char*[])
 
                     std::cout << "\n\n\n\n" << unique_prefix << std::endl;
 
+                    std::ofstream ttc_ofs{unique_prefix + "_time_to_collision.txt", std::ios::out};
+                    ttc_ofs << "image_id ttc_lidar ttc_camera\n";
+
                     /* MAIN LOOP OVER ALL IMAGES */
 
                     for (int imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex += imgStepWidth) {
@@ -179,11 +182,11 @@ int main(int, const char*[])
 
                         // extract 2D keypoints from current image
                         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-                        string detectorType = "FAST";
+                        string detectorType = ToString(e_detector);
 
-                        if (detectorType.compare("SHITOMASI") == 0) {
+                        if ( detectorType == "SHITOMASI" ) {
                             detKeypointsShiTomasi(keypoints, imgGray, false);
-                        } else if (detectorType == "HARRIS") {
+                        } else if ( detectorType == "HARRIS" ) {
                             detKeypointsHarris(keypoints, imgGray, bVis);
                         } else {
                             detKeypointsModern(keypoints, imgGray, detectorType, bVis);
@@ -211,7 +214,7 @@ int main(int, const char*[])
                         /* EXTRACT KEYPOINT DESCRIPTORS */
 
                         cv::Mat descriptors;
-                        string descriptorType = "BRIEF"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+                        string descriptorType = ToString(e_descriptor); // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
                         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors,
                                       descriptorType);
 
@@ -227,9 +230,9 @@ int main(int, const char*[])
                             /* MATCH KEYPOINT DESCRIPTORS */
 
                             vector<cv::DMatch> matches;
-                            string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
-                            string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
-                            string selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
+                            string matcherType = ToString(e_matcher);        // MAT_BF, MAT_FLANN
+                            string descriptorType = ToString(CompatibleDescriptorTypes(e_descriptor)[0]); // DES_BINARY, DES_HOG
+                            string selectorType = ToString(e_selector);       // SEL_NN, SEL_KNN
 
                             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
@@ -321,10 +324,12 @@ int main(int, const char*[])
                                     }
                                     bVis = false;
 
+                                    ttc_ofs << imgIndex << ' ' << ttcLidar << ' ' << ttcCamera << '\n';
+
                                 } // eof TTC computation
                             } // eof loop over all BB matches
 
-                        }
+                        } // end of "if" data buffer is not empty
 
                     } // eof loop over all images
 
