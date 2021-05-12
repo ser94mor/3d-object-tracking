@@ -106,7 +106,7 @@ int main(int, const char*[])
 
                     std::cout << "\n\n\n\n" << unique_prefix << std::endl;
 
-                    std::ofstream ttc_ofs{unique_prefix + "_time_to_collision.txt", std::ios::out};
+                    std::ofstream ttc_ofs{unique_prefix + ".txt", std::ios::out};
                     ttc_ofs << "image_id ttc_lidar ttc_camera\n";
 
                     /* MAIN LOOP OVER ALL IMAGES */
@@ -230,9 +230,9 @@ int main(int, const char*[])
                             /* MATCH KEYPOINT DESCRIPTORS */
 
                             vector<cv::DMatch> matches;
-                            string matcherType = ToString(e_matcher);        // MAT_BF, MAT_FLANN
-                            string descriptorType = ToString(CompatibleDescriptorTypes(e_descriptor)[0]); // DES_BINARY, DES_HOG
-                            string selectorType = ToString(e_selector);       // SEL_NN, SEL_KNN
+                            string matcherType = ToString(e_matcher);        // BF, FLANN
+                            string descriptorType = ToString(CompatibleDescriptorTypes(e_descriptor)[0]); // BINARY, HOG
+                            string selectorType = ToString(e_selector);       // NN, KNN
 
                             matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
                                              (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,

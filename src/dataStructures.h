@@ -83,22 +83,22 @@ DECLARE_VARIABLES(DESCRIPTORS, descriptor, Descriptor);
 
 /* a list of all possible descriptor types */
 #define DESCRIPTOR_TYPES(action, arg, sep)        \
-        action(arg, DES_BINARY)               sep \
-        action(arg, DES_HOG)
+        action(arg, BINARY)                   sep \
+        action(arg, HOG)
 DECLARE_VARIABLES(DESCRIPTOR_TYPES, descriptor_type, DescriptorType);
 
 
 /* a list of all possible matchers */
 #define MATCHERS(action, arg, sep)        \
-        action(arg, MAT_BF)           sep \
-        action(arg, MAT_FLANN)
+        action(arg, BF)               sep \
+        action(arg, FLANN)
 DECLARE_VARIABLES(MATCHERS, matcher, Matcher);
 
 
 /* a list of all possible selectors */
 #define SELECTORS(action, arg, sep)        \
-        action(arg, SEL_NN)           sep \
-        action(arg, SEL_KNN)
+        action(arg, NN)                sep \
+        action(arg, KNN)
 DECLARE_VARIABLES(SELECTORS, selector, Selector);
 
 inline std::vector<DescriptorType> CompatibleDescriptorTypes(const Descriptor descriptor)
@@ -110,9 +110,9 @@ inline std::vector<DescriptorType> CompatibleDescriptorTypes(const Descriptor de
         case descriptor_ORB:
         case descriptor_FREAK:
         case descriptor_AKAZE:
-            return { descriptor_type_DES_BINARY, descriptor_type_DES_HOG, };
+            return { descriptor_type_BINARY, descriptor_type_HOG, };
         case descriptor_SIFT:
-            return { descriptor_type_DES_HOG, };
+            return { descriptor_type_HOG, };
         default:
             throw std::logic_error("some descriptors are not presented in the list of 'case' statements");
     }

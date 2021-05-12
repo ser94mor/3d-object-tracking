@@ -14,12 +14,12 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
   bool crossCheck = false;
   cv::Ptr<cv::DescriptorMatcher> matcher;
 
-  if (matcherType == "MAT_BF")
+  if (matcherType == "BF")
   {
-    int normType = (descriptorType == "DES_HOG") ? cv::NORM_L2 : cv::NORM_HAMMING;
+    int normType = (descriptorType == "HOG") ? cv::NORM_L2 : cv::NORM_HAMMING;
     matcher = cv::BFMatcher::create(normType, crossCheck);
   }
-  else if (matcherType == "MAT_FLANN")
+  else if (matcherType == "FLANN")
   {
     if (descSource.type() != CV_32F)
     { // OpenCV bug workaround :
@@ -36,7 +36,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
   }
 
   // perform matching task
-  if (selectorType == "SEL_NN")
+  if (selectorType == "NN")
   { // nearest neighbor (best match)
     auto t = static_cast<double>(cv::getTickCount());
 
@@ -45,7 +45,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     t = (static_cast<double>(cv::getTickCount()) - t) / cv::getTickFrequency();
     cout << " (NN) with n=" << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
   }
-  else if (selectorType == "SEL_KNN")
+  else if (selectorType == "KNN")
   { // k nearest neighbors (k=2)
     int k = 2; // number of neighbours
     vector<vector<cv::DMatch>> knn_matches;
