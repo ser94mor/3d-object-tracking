@@ -70,7 +70,8 @@ void clusterLidarWithROI(std::vector<BoundingBox> &boundingBoxes, std::vector<Li
  * For instance, to use a 1000x1000 size, adjusting the text positions by dividing them by 2.
  */
 void show3DObjects(
-const std::vector<BoundingBox>& boundingBoxes, const cv::Size& worldSize, const cv::Size& imageSize, const bool bWait)
+const std::vector<BoundingBox>& boundingBoxes,
+const cv::Size& worldSize, const cv::Size& imageSize, const int img_id, const bool bWait)
 {
     // create topview image
     cv::Mat topviewImg(imageSize, CV_8UC3, cv::Scalar(255, 255, 255));
@@ -112,7 +113,7 @@ const std::vector<BoundingBox>& boundingBoxes, const cv::Size& worldSize, const 
 
         // augment object with some key data
         char str1[200], str2[200];
-        sprintf(str1, "id=%d, #pts=%d", boundingBox.boxID, (int)boundingBox.lidarPoints.size());
+        sprintf(str1, "img_id=%d, id=%d, #pts=%d", img_id, boundingBox.boxID, (int)boundingBox.lidarPoints.size());
         putText(topviewImg, str1, cv::Point2f(left-250, bottom+50), cv::FONT_ITALIC, 2, currColor);
         sprintf(str2, "xmin=%2.2f m, yw=%2.2f m", xwmin, ywmax-ywmin);
         putText(topviewImg, str2, cv::Point2f(left-250, bottom+125), cv::FONT_ITALIC, 2, currColor);  
@@ -130,7 +131,7 @@ const std::vector<BoundingBox>& boundingBoxes, const cv::Size& worldSize, const 
 
     // display image
     string windowName = "3D Objects";
-    cv::namedWindow(windowName, 1);
+    cv::namedWindow(windowName, cv::WINDOW_NORMAL);
     cv::imshow(windowName, topviewImg);
 
     if(bWait)
@@ -259,7 +260,7 @@ void computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev,
     // we can achieve O(N + K*log(N)) time complexity with the heap in comparison to sorting (O(N*log(N))),
     // where N is the number of lidar points and K << N (significantly less than)
 
-    const size_t K = 13;
+    const size_t K = 10;
     const size_t P = 5;
     assert (K <= lidarPointsPrev.size() and K <= lidarPointsCurr.size());
 
@@ -270,15 +271,15 @@ void computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev,
     // the first K elements in the array will be the K minimum distance elements w.r.t. X coordinates
     // sorted in the descending order, that is, the Kth closes element will be the first one and the closest one
     // will be on the Kth position (index K-1)
-    std::sort_heap(lidarPointsPrev.begin(), lidarPointsPrev.begin()+K, cmpFunc);
+    std::sort_heap(lidarPointsPrev.begin(), lidarPointsPrev.begin(), cmpFunc);
 
     std::make_heap(lidarPointsCurr.begin(), lidarPointsCurr.end(), cmpFunc);
-    std::sort_heap(lidarPointsCurr.begin(), lidarPointsCurr.begin()+K, cmpFunc);
+    std::sort_heap(lidarPointsCurr.begin(), lidarPointsCurr.begin(), cmpFunc);
 
     // take average of (K-P)th to Kth point to compute the distance to the preceding vehicle
     auto sumOp = [](const double sum, const LidarPoint& lp) { return sum + lp.x; };
-    double prevMeanX = std::accumulate(lidarPointsPrev.begin(), lidarPointsPrev.begin()+K, 0.0, sumOp) / P;
-    double currMeanX = std::accumulate(lidarPointsCurr.begin(), lidarPointsCurr.begin()+K, 0.0, sumOp) / P;
+    double prevMeanX = std::accumulate(lidarPointsPrev.begin()+P, lidarPointsPrev.begin()+K, 0.0, sumOp) / (K - P);
+    double currMeanX = std::accumulate(lidarPointsCurr.begin()+P, lidarPointsCurr.begin()+K, 0.0, sumOp) / (K - P);
 
     // compute TTC in accordance with the constant velocity motion model
     double T = 1.0 / frameRate;

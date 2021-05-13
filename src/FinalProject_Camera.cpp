@@ -23,7 +23,7 @@
 
 using namespace std;
 
-//
+// FAST_BRIEF_BINARY_BF_NN
 constexpr bool kSingleRunFlag = true;
 constexpr struct {
     Detector detector = detector_SHITOMASI;
@@ -31,6 +31,11 @@ constexpr struct {
     DescriptorType descriptor_type = descriptor_type_HOG;
     Matcher matcher = matcher_FLANN;
     Selector selector = selector_NN;
+//    Detector detector = detector_FAST;
+//    Descriptor descriptor = descriptor_BRIEF;
+//    DescriptorType descriptor_type = descriptor_type_BINARY;
+//    Matcher matcher = matcher_BF;
+//    Selector selector = selector_NN;
 } kSingleRunConfig;
 
 /* MAIN PROGRAM */
@@ -176,7 +181,7 @@ int main(int, const char*[])
                             /* CLUSTER LIDAR POINT CLOUD */
 
                             // associate Lidar points with camera-based ROI
-                            float shrinkFactor = 0.10; // shrinks each bounding box by the given percentage to avoid 3D object merging at the edges of an ROI
+                            float shrinkFactor = 0.2; // shrinks each bounding box by the given percentage to avoid 3D object merging at the edges of an ROI
                             clusterLidarWithROI((dataBuffer.end() - 1)->boundingBoxes,
                                                 (dataBuffer.end() - 1)->lidarPoints,
                                                 shrinkFactor, P_rect_00, R_rect_00, RT);
@@ -185,7 +190,7 @@ int main(int, const char*[])
                             bVis = kSingleRunFlag;
                             if (bVis) {
                                 show3DObjects((dataBuffer.end() - 1)->boundingBoxes, cv::Size(4.0, 20.0),
-                                              cv::Size(2000, 2000), true);
+                                              cv::Size(2000, 2000), imgIndex, true);
                             }
                             bVis = false;
 
@@ -331,7 +336,7 @@ int main(int, const char*[])
                                                           cv::Scalar(0, 255, 0), 2);
 
                                             char str[200];
-                                            sprintf(str, "TTC Lidar : %f s, TTC Camera : %f s", ttcLidar, ttcCamera);
+                                            sprintf(str, "Image ID: %d, TTC Lidar : %f s, TTC Camera : %f s", imgIndex, ttcLidar, ttcCamera);
                                             putText(visImg, str, cv::Point2f(80, 50), cv::FONT_HERSHEY_PLAIN, 2,
                                                     cv::Scalar(0, 0, 255));
 
