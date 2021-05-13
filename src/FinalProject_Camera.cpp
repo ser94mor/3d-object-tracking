@@ -23,13 +23,13 @@
 
 using namespace std;
 
-// FAST_BRIEF_BINARY_BF_NN
-constexpr bool kSingleRunFlag = true;
+// SHITOMASI_BRISK_BINARY_BF_NN
+constexpr bool kSingleRunFlag = false;
 constexpr struct {
     Detector detector = detector_SHITOMASI;
-    Descriptor descriptor = descriptor_SIFT;
-    DescriptorType descriptor_type = descriptor_type_HOG;
-    Matcher matcher = matcher_FLANN;
+    Descriptor descriptor = descriptor_BRISK;
+    DescriptorType descriptor_type = descriptor_type_BINARY;
+    Matcher matcher = matcher_BF;
     Selector selector = selector_NN;
 //    Detector detector = detector_FAST;
 //    Descriptor descriptor = descriptor_BRIEF;
@@ -325,30 +325,41 @@ int main(int, const char*[])
                                                          (dataBuffer.end() - 1)->keypoints, currBB->kptMatches,
                                                          sensorFrameRate, ttcCamera);
 
-                                        bVis = kSingleRunFlag;
-                                        if (bVis) {
-                                            cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
-                                            showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00, RT,
-                                                                &visImg);
-                                            cv::rectangle(visImg, cv::Point(currBB->roi.x, currBB->roi.y),
-                                                          cv::Point(currBB->roi.x + currBB->roi.width,
-                                                                    currBB->roi.y + currBB->roi.height),
-                                                          cv::Scalar(0, 255, 0), 2);
+                                        const bool is_valid = not
+                                                ( std::isnan(ttcLidar)  or
+                                                  std::isnan(ttcCamera) or
+                                                  std::isinf(ttcLidar)  or
+                                                  std::isinf(ttcCamera) );
 
-                                            char str[200];
-                                            sprintf(str, "Image ID: %d, TTC Lidar : %f s, TTC Camera : %f s", imgIndex, ttcLidar, ttcCamera);
-                                            putText(visImg, str, cv::Point2f(80, 50), cv::FONT_HERSHEY_PLAIN, 2,
-                                                    cv::Scalar(0, 0, 255));
 
-                                            string windowName = "Final Results : TTC";
-                                            cv::namedWindow(windowName, 4);
-                                            cv::imshow(windowName, visImg);
-                                            cout << "Press key to continue to next frame" << endl;
-                                            cv::waitKey(0);
+                                        if (is_valid) {
+                                            bVis = kSingleRunFlag;
+                                            if (bVis) {
+                                                cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
+                                                showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00,
+                                                                    RT,
+                                                                    &visImg);
+                                                cv::rectangle(visImg, cv::Point(currBB->roi.x, currBB->roi.y),
+                                                              cv::Point(currBB->roi.x + currBB->roi.width,
+                                                                        currBB->roi.y + currBB->roi.height),
+                                                              cv::Scalar(0, 255, 0), 2);
+
+                                                char str[200];
+                                                sprintf(str, "Image ID: %d, TTC Lidar : %f s, TTC Camera : %f s",
+                                                        imgIndex, ttcLidar, ttcCamera);
+                                                putText(visImg, str, cv::Point2f(80, 50), cv::FONT_HERSHEY_PLAIN, 2,
+                                                        cv::Scalar(0, 0, 255));
+
+                                                string windowName = "Final Results : TTC";
+                                                cv::namedWindow(windowName, 4);
+                                                cv::imshow(windowName, visImg);
+                                                cout << "Press key to continue to next frame" << endl;
+                                                cv::waitKey(0);
+                                            }
+                                            bVis = false;
+
+                                            ttc_ofs << imgIndex << ' ' << ttcLidar << ' ' << ttcCamera << '\n';
                                         }
-                                        bVis = false;
-
-                                        ttc_ofs << imgIndex << ' ' << ttcLidar << ' ' << ttcCamera << '\n';
 
                                     } // eof TTC computation
                                 } // eof loop over all BB matches
