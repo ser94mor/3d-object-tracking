@@ -23,6 +23,16 @@
 
 using namespace std;
 
+//
+constexpr bool kSingleRunFlag = true;
+constexpr struct {
+    Detector detector = detector_SHITOMASI;
+    Descriptor descriptor = descriptor_SIFT;
+    DescriptorType descriptor_type = descriptor_type_HOG;
+    Matcher matcher = matcher_FLANN;
+    Selector selector = selector_NN;
+} kSingleRunConfig;
+
 /* MAIN PROGRAM */
 int main(int, const char*[])
 {
@@ -84,15 +94,21 @@ int main(int, const char*[])
             for (auto e_descriptor_type : CompatibleDescriptorTypes(e_descriptor)) {
                 for (auto e_matcher : matcher_array) {
                     for (auto e_selector : selector_array) {
+
+                        if (kSingleRunFlag)
+                        {
+                            e_detector = kSingleRunConfig.detector;
+                            e_descriptor = kSingleRunConfig.descriptor;
+                            e_descriptor_type = kSingleRunConfig.descriptor_type;
+                            e_matcher = kSingleRunConfig.matcher;
+                            e_selector = kSingleRunConfig.selector;
+                        }
+
                         // misc
                         double sensorFrameRate = 10.0 / imgStepWidth; // frames per second for Lidar and camera
                         const size_t dataBufferSize = 2;       // no. of images which are held in memory (ring buffer) at the same time
                         CircularBuffer<DataFrame, dataBufferSize> dataBuffer; // list of data frames which are held in memory at the same time
-                        bool bVis = e_detector == detector_SHITOMASI         and
-                                    e_descriptor == descriptor_SIFT          and
-                                    e_descriptor_type == descriptor_type_HOG and
-                                    e_matcher == matcher_FLANN               and
-                                    e_selector == selector_NN;            // visualize results
+                        bool bVis = kSingleRunFlag;            // visualize results
                         std::ostringstream oss;
                         oss << ToString(e_detector) << '_'
                             << ToString(e_descriptor) << '_'
@@ -166,7 +182,7 @@ int main(int, const char*[])
                                                 shrinkFactor, P_rect_00, R_rect_00, RT);
 
                             // Visualize 3D objects
-                            bVis = false;
+                            bVis = kSingleRunFlag;
                             if (bVis) {
                                 show3DObjects((dataBuffer.end() - 1)->boundingBoxes, cv::Size(4.0, 20.0),
                                               cv::Size(2000, 2000), true);
@@ -304,7 +320,7 @@ int main(int, const char*[])
                                                          (dataBuffer.end() - 1)->keypoints, currBB->kptMatches,
                                                          sensorFrameRate, ttcCamera);
 
-                                        bVis = false;
+                                        bVis = kSingleRunFlag;
                                         if (bVis) {
                                             cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
                                             showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00, RT,
@@ -336,11 +352,16 @@ int main(int, const char*[])
 
                         } // eof loop over all images
 
+                        if (kSingleRunFlag)
+                        {
+                            goto out;
+                        }
+
                     }
                 }
             }
         }
     }
-
-    return 0;
+out:
+    return EXIT_SUCCESS;
 }

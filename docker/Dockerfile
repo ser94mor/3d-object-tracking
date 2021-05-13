@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update && \
-    apt-get install --yes gcc g++ cmake make wget unzip
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes gcc g++ cmake make wget unzip pkg-config libgtk2.0-dev
 
 RUN wget -O opencv-4.1.0.zip https://codeload.github.com/opencv/opencv/zip/4.1.0 && \
     unzip opencv-4.1.0.zip && \
