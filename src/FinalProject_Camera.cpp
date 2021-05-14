@@ -23,20 +23,17 @@
 
 using namespace std;
 
-// SHITOMASI_BRISK_BINARY_BF_NN
-constexpr bool kSingleRunFlag = false;
+
+constexpr bool kSingleRunFlag = true;
 constexpr struct {
     Detector detector = detector_SHITOMASI;
-    Descriptor descriptor = descriptor_BRISK;
-    DescriptorType descriptor_type = descriptor_type_BINARY;
-    Matcher matcher = matcher_BF;
+    Descriptor descriptor = descriptor_SIFT;
+    DescriptorType descriptor_type = descriptor_type_HOG;
+    Matcher matcher = matcher_FLANN;
     Selector selector = selector_NN;
-//    Detector detector = detector_FAST;
-//    Descriptor descriptor = descriptor_BRIEF;
-//    DescriptorType descriptor_type = descriptor_type_BINARY;
-//    Matcher matcher = matcher_BF;
-//    Selector selector = selector_NN;
 } kSingleRunConfig;
+
+
 
 /* MAIN PROGRAM */
 int main(int, const char*[])
