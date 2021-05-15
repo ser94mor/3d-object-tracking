@@ -98,3 +98,18 @@ The Camera-derived TTC calculation happens in the "compute TTC on object in fron
 
 #### Accuracy Analysis
 
+With the parameter tuning of the LiDAR-based TTC component and the choice of the most appropriate combination of 
+(detector, descriptor, descriptor type, matcher, selector) for the Camera-based TTC component, 
+the outlier estimates of TTC in both cases have been eliminated.
+
+
+#### Building and Running
+
+The build happens inside the docker container. The docker image is included in this repository. 
+One needs to execute the `do_build.sh` script to build the project. The build artifacts will be located in the 
+`cmake-build` folder.  
+
+The generated executable has all the OpenCV-dependencies statically linked to it, 
+so it can be run without the docker container, on a host, by executing the `do_run.sh` script.  
+
+The `build_and_run.sh` script combines the build and run steps. 
