@@ -28,6 +28,12 @@ for creating groups of LiDAR points whose projection into the camera image falls
 produced by the YOLOv3. It implements the "cluster LiDAR point cloud" step from the system diagram 
 (rectangle #3 in the picture above).
 
+
+The matching of bounding boxes from the previous and the current frames corresponding to the vehicle ahead will 
+be described in the section [Camera-derived TTC](#camera-derived-ttc) as it provides a better context to 
+facilitate understanding of the algorithm.
+
+
 The LiDAR-derived TTC is calculated using the function `computeTTCLidar` from the file 
 [camFusion_Student.cpp](src/camFusion_Student.cpp). To avoid severe estimation errors and make such estimations 
 more robust, the following approach has been adapted:
@@ -49,6 +55,36 @@ The LiDAR-derived TTC calculation happens in the "compute TTC on object in front
 (rectangle #9 in the picture above).
 
 #### Camera-derived TTC
+
+The detection of image keypoints happens in the function(s) ` detKeypoints*` from the file 
+[matching2D_Student.cpp](src/matching2D_Student.cpp) and corresponds to the step "detect image keypoints" 
+from the system diagram (rectangle #5 in the picture above).
+
+The calculation of keypoints descriptors happens in the function `descKeypoints` from the file 
+[matching2D_Student.cpp](src/matching2D_Student.cpp) and corresponds to the step "extract keypoint descriptors" 
+from the system diagram (rectangle #6 in the picture above).
+
+The matching of keypoint descriptors from the previous and the current frames is done in the function 
+`matchDescriptors` from the file [matching2D_Student.cpp](src/matching2D_Student.cpp). 
+It corresponds to the step "match keypoint descriptors" from the system diagram (rectangle #7 in the picture above).
+
+The next step is to associate the keypoints that matched previously with the bounding boxes. 
+It is handled in the function `findBoundingBoxesContainingKeypoint` from the 
+[camFusion_Student.cpp](src/camFusion_Student.cpp) file. This keypoints association with bounding boxes is 
+the first part of the "track 3D object bounding boxes" step from the system diagram (rectangle #8 in the picture above).
+
+The matching of bounding boxes from the previous and the current frames corresponding to the vehicle ahead is done
+in the `matchBoundingBoxes` function from the file [camFusion_Student.cpp](src/camFusion_Student.cpp).
+The bounding boxes between the current and the previous frames are associated based on the number of matches between
+the key points lying inside corresponding bounding boxes. Which points are lying inside which boxes is determined by 
+the function `findBoundingBoxesContainingKeypoint` from the [camFusion_Student.cpp](src/camFusion_Student.cpp) file.
+The pair of bounding boxes having the maximum number of matches gets chosen. This bounding box matching corresponds to
+the "track 3D object bounding boxes" step from the system diagram (rectangle #8 in the picture above).
+
+To compute Camera-derived TTC, one first needs to associate key points with the current bounding box of the vehicle 
+ahead while accounting for outlier matches and removing them from consideration. 
+The function `clusterKptMatchesWithROI` from the file [camFusion_Student.cpp](src/camFusion_Student.cpp) accomplishes 
+this disregarding 20% of all the keypoint pairs having the highest euclidean distances between them. 
 
 
 #### Keypoints Statistics

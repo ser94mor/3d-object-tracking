@@ -27,9 +27,9 @@ using namespace std;
 constexpr bool kSingleRunFlag = true;
 constexpr struct {
     Detector detector = detector_SHITOMASI;
-    Descriptor descriptor = descriptor_SIFT;
-    DescriptorType descriptor_type = descriptor_type_HOG;
-    Matcher matcher = matcher_FLANN;
+    Descriptor descriptor = descriptor_ORB;
+    DescriptorType descriptor_type = descriptor_type_BINARY;
+    Matcher matcher = matcher_BF;
     Selector selector = selector_NN;
 } kSingleRunConfig;
 

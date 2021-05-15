@@ -145,7 +145,7 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
                               std::vector<cv::KeyPoint> &kptsCurr, std::vector<cv::DMatch> &kptMatches)
 {
     double filterOutliersRatio = 0.2; // remove 20% of the most high valued distances
-    std::multiset<double> euclideanDistances;
+    std::multiset<double> euclideanDistances; // multiset will sort its entries in the ascending order
 
     // calculate Euclidean distances between keypoints
     for (const auto& match : kptMatches)
@@ -159,6 +159,7 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
             euclideanDistances.emplace(cv::norm(currKpt.pt - prevKpt.pt));
         }
     }
+
     const double euclideanDistanceMean =
             std::accumulate(euclideanDistances.begin(), euclideanDistances.end(), 0.0) / euclideanDistances.size();
     const double euclideanDistanceStandardDeviation = std::sqrt(
@@ -170,9 +171,9 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
                             }) / euclideanDistances.size());
 
     auto r_offset = static_cast<size_t>(round(filterOutliersRatio * euclideanDistances.size()));
-    auto it = euclideanDistances.crend();
+    auto it = euclideanDistances.crbegin();
     std::advance(it, r_offset);
-    double filterKptsWithDistHigherThan = *it;
+    const double filterKptsWithDistHigherThan = *it;
 
     for (const auto& match : kptMatches)
     {
