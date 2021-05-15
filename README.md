@@ -102,6 +102,33 @@ With the parameter tuning of the LiDAR-based TTC component and the choice of the
 (detector, descriptor, descriptor type, matcher, selector) for the Camera-based TTC component, 
 the outlier estimates of TTC in both cases have been eliminated.
 
+There are 252 possible (valid) combinations of (detector, descriptor, descriptor type, matcher, selector), 
+and one needs to choose the most suitable combination in terms of accuracy.
+
+To choose an optimal combination of (detector, descriptor, descriptor type, matcher, selector), a scoring system was
+constructed that produces the score between 0 and 1 for each combination; the higher the score, 
+the better the combination performs. It will have taken forever to find an optimal combination manually.
+
+This score is a combination of three other scores:
+1. Score assessing the number of measurements. The more measurements, the better. 
+   A combination may produce NaN or Inf values for some pair of images, and such measurements have to be filtered out.
+2. Score assessing how similar LiDAR-derived and Camera-derived TTC estimates are. 
+   The Mean Absolute Error (MAE) metric takes part in the calculation of this score.
+3. Score assessing how smooth the series of LiDAR, Camera, and Average between LiDAR and Camera estimates are. 
+   This score relies on Root Mean Square Error (RMSE) and the differences between two consecutive TTC estimates. 
+   The RMSE metric is used because we want to penalize more for larger TTC estimate differences. 
+   RMSEs for LiDAR-derived, for Camera-derived, and for (LiDAR-TTC + Camera-TTC) / 2. 
+   It would be more appropriate to use some other measure of time series smoothness, such as that defined in 
+   the paper "Measuring and comparing smoothness in time series. The production smoothing hypothesis" 
+   (https://doi.org/10.1016/0304-4076(94)90059-0). However, it is more laborious to understand and implement it.
+
+All the scores are calculated using either of the following formulas:
+- 1 - (curr_val - min_val_in_dataset)  / (max_val_in_dataset - min_val_in_dataset), when the lower the better (MAE, RMSE).
+- (curr_val - min_val_in_dataset)  / (max_val_in_dataset - min_val_in_dataset), when the greater the better (# of estimates).
+
+Some combinations are excluded from consideration at all. Those are having at least one TTC estimates that are way off. In the case considered here, these are TTCs < 5 seconds and TTCs > 25 seconds. This exclusion was done to balance the final scores of combinations. Otherwise, the best five combinations were having total scores > 0.99, and the distinction between them was not noticeable.
+
+All the scores are calculated in the [Statistics_and_Graphs.ipynb](Statistics_and_Graphs.ipynb) file.
 
 #### Building and Running
 
