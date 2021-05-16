@@ -164,9 +164,7 @@ LiDAR-based TTC estimates are the same for all the combinations.
 
 ![graph.png](pics/graph.png)  
 
-From the visual graph analysis I cannot extract any useful information regarding which 
-combination is the best and suggest relying on scoring. However, we can see that at the image #3
-the LiDAR has an outlier. From the 
+From the visual graph one can identify the LiDAR-derived TTC outlier for the image #3. 
 
 #### Building and Running
 

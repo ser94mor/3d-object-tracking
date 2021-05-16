@@ -19,8 +19,10 @@ fi
 docker run --rm --tty --interactive --volume "${DIRNAME}":/workspace 3d-object-tracking:latest \
     bash -c 'mkdir --parents cmake-build; \
              cd cmake-build; \
-	     cmake ..; \
-	     make -j$(nproc --ignore 1); \
-	     cd ../; \
-	     chmod -R a+rw cmake-build/'
+             cmake .. && \
+             make -j$(nproc --ignore 1); \
+             ret=$?; \
+             cd ../; \
+             chmod -R a+rw cmake-build/; \
+             exit $ret;'
 
