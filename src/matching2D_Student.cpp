@@ -14,12 +14,12 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
   bool crossCheck = false;
   cv::Ptr<cv::DescriptorMatcher> matcher;
 
-  if (matcherType == "MAT_BF")
+  if (matcherType == "BF")
   {
-    int normType = (descriptorType == "DES_HOG") ? cv::NORM_L2 : cv::NORM_HAMMING;
+    int normType = (descriptorType == "HOG") ? cv::NORM_L2 : cv::NORM_HAMMING;
     matcher = cv::BFMatcher::create(normType, crossCheck);
   }
-  else if (matcherType == "MAT_FLANN")
+  else if (matcherType == "FLANN")
   {
     if (descSource.type() != CV_32F)
     { // OpenCV bug workaround :
@@ -36,7 +36,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
   }
 
   // perform matching task
-  if (selectorType == "SEL_NN")
+  if (selectorType == "NN")
   { // nearest neighbor (best match)
     auto t = static_cast<double>(cv::getTickCount());
 
@@ -45,7 +45,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     t = (static_cast<double>(cv::getTickCount()) - t) / cv::getTickFrequency();
     cout << " (NN) with n=" << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
   }
-  else if (selectorType == "SEL_KNN")
+  else if (selectorType == "KNN")
   { // k nearest neighbors (k=2)
     int k = 2; // number of neighbours
     vector<vector<cv::DMatch>> knn_matches;
@@ -152,11 +152,6 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
   extractor->compute(img, keypoints, descriptors);
   t = (static_cast<double>(cv::getTickCount()) - t) / cv::getTickFrequency();
   cout << descriptorType << " descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
-
-  fstream ofs;
-  ofs.open(descriptorType + "_descriptor_timings.txt", std::ios::app);
-  ofs << 1000 * t / 1.0 << '\n';
-  ofs.close();
 }
 
 // Detect keypoints in image using the traditional Shi-Thomasi detector
@@ -187,11 +182,6 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
   }
   t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
   cout << "Shi-Tomasi detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-  fstream ofs;
-  ofs.open("SHITOMASI_detector_timings.txt", std::ios::app);
-  ofs << 1000 * t / 1.0 << '\n';
-  ofs.close();
 
   // visualize results
   if (bVis)
@@ -260,11 +250,6 @@ void detKeypointsHarris(std::vector<cv::KeyPoint>& keypoints, cv::Mat& img, bool
   } // end of loop over rows
   t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
   cout << "Harris detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-  fstream ofs;
-  ofs.open("HARRIS_detector_timings.txt", std::ios::app);
-  ofs << 1000 * t / 1.0 << '\n';
-  ofs.close();
 
   // visualize results, if requested
   if (bVis)
@@ -344,11 +329,6 @@ void detKeypointsModern(std::vector<cv::KeyPoint>& keypoints, cv::Mat& img, std:
   detector->detect(img, keypoints);
   t = (static_cast<double>(cv::getTickCount()) - t) / cv::getTickFrequency();
   cout << detectorType << " with n= " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-  fstream ofs;
-  ofs.open(detectorType + "_detector_timings.txt", std::ios::app);
-  ofs << 1000 * t / 1.0 << '\n';
-  ofs.close();
 
   if (bVis)
   {
