@@ -140,23 +140,23 @@ The TOP-10 combinations in terms of accuracy are
 
 | **COMBINATION** | **SCORE** | **IMG#1** | **IMG#2** | **IMG#3** | **IMG#4** | **IMG#5** | **IMG#6** | **IMG#7** | **IMG#8** | **IMG#9** | **IMG#10** | **IMG#11** | **IMG#12** | **IMG#13** | **IMG#14** | **IMG#15** | **IMG#16** | **IMG#17** | **IMG#18** |  
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|  
-| SHITOMASI_SIFT_HOG_FLANN_NN | 0.972 | **L**:14.87 <br> **C**:14.28 | **L**:12.23 <br> **C**:13.04 | N/A | **L**:13.01 <br> **C**:12.87 | **L**:11.87 <br> **C**:11.96 | **L**:10.61 <br> **C**:13.58 | **L**:15.25 <br> **C**:13.29 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:12.04 | **L**:14.69 <br> **C**:14.08 | **L**:12.72 <br> **C**:12.00 | **L**:9.76 <br> **C**:12.01 | **L**:8.89 <br> **C**:12.08 | **L**:9.95 <br> **C**:12.47 | **L**:7.77 <br> **C**:12.46 | **L**:10.37 <br> **C**:11.99 | **L**:10.89 <br> **C**:11.34 | N/A |  
-| SHITOMASI_SIFT_HOG_BF_NN | 0.911 | **L**:14.87 <br> **C**:14.07 | **L**:12.23 <br> **C**:13.74 | N/A | **L**:13.01 <br> **C**:13.02 | **L**:11.87 <br> **C**:12.41 | **L**:10.61 <br> **C**:13.74 | **L**:15.25 <br> **C**:13.36 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:12.11 | **L**:14.69 <br> **C**:14.08 | **L**:12.72 <br> **C**:11.67 | N/A | **L**:8.89 <br> **C**:12.08 | **L**:9.95 <br> **C**:12.47 | **L**:7.77 <br> **C**:12.46 | **L**:10.37 <br> **C**:11.72 | **L**:10.89 <br> **C**:11.86 | N/A |  
+| SHITOMASI_SIFT_HOG_FLANN_NN | 0.971 | **L**:14.87 <br> **C**:14.28 | **L**:12.23 <br> **C**:13.04 | N/A | **L**:13.01 <br> **C**:12.87 | **L**:11.87 <br> **C**:11.96 | **L**:10.61 <br> **C**:13.58 | **L**:15.25 <br> **C**:13.29 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:12.04 | **L**:14.69 <br> **C**:14.08 | **L**:12.72 <br> **C**:12.00 | **L**:9.76 <br> **C**:12.01 | **L**:8.89 <br> **C**:12.08 | **L**:9.95 <br> **C**:12.47 | **L**:7.77 <br> **C**:12.46 | **L**:10.37 <br> **C**:11.99 | **L**:10.89 <br> **C**:11.34 | N/A |  
+| SHITOMASI_SIFT_HOG_BF_NN | 0.910 | **L**:14.87 <br> **C**:14.07 | **L**:12.23 <br> **C**:13.74 | N/A | **L**:13.01 <br> **C**:13.02 | **L**:11.87 <br> **C**:12.41 | **L**:10.61 <br> **C**:13.74 | **L**:15.25 <br> **C**:13.36 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:12.11 | **L**:14.69 <br> **C**:14.08 | **L**:12.72 <br> **C**:11.67 | N/A | **L**:8.89 <br> **C**:12.08 | **L**:9.95 <br> **C**:12.47 | **L**:7.77 <br> **C**:12.46 | **L**:10.37 <br> **C**:11.72 | **L**:10.89 <br> **C**:11.86 | N/A |  
 | AKAZE_FREAK_BINARY_BF_NN | 0.902 | N/A | **L**:12.23 <br> **C**:13.90 | N/A | **L**:13.01 <br> **C**:13.75 | **L**:11.87 <br> **C**:14.96 | **L**:10.61 <br> **C**:14.12 | **L**:15.25 <br> **C**:15.45 | **L**:15.65 <br> **C**:15.75 | **L**:12.35 <br> **C**:14.23 | **L**:14.69 <br> **C**:11.62 | **L**:12.72 <br> **C**:12.23 | **L**:9.76 <br> **C**:10.85 | **L**:8.89 <br> **C**:10.79 | **L**:9.95 <br> **C**:10.36 | N/A | **L**:10.37 <br> **C**:10.22 | **L**:10.89 <br> **C**:9.88 | N/A |  
-| AKAZE_AKAZE_BINARY_FLANN_NN | 0.886 | **L**:14.87 <br> **C**:12.58 | **L**:12.23 <br> **C**:14.71 | N/A | **L**:13.01 <br> **C**:13.80 | **L**:11.87 <br> **C**:15.42 | **L**:10.61 <br> **C**:13.57 | **L**:15.25 <br> **C**:15.62 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:15.96 | **L**:14.69 <br> **C**:11.50 | **L**:12.72 <br> **C**:12.47 | **L**:9.76 <br> **C**:11.64 | **L**:8.89 <br> **C**:11.49 | **L**:9.95 <br> **C**:10.76 | N/A | **L**:10.37 <br> **C**:10.27 | **L**:10.89 <br> **C**:9.53 | N/A |  
+| AKAZE_AKAZE_BINARY_FLANN_NN | 0.885 | **L**:14.87 <br> **C**:12.58 | **L**:12.23 <br> **C**:14.71 | N/A | **L**:13.01 <br> **C**:13.80 | **L**:11.87 <br> **C**:15.42 | **L**:10.61 <br> **C**:13.57 | **L**:15.25 <br> **C**:15.62 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:15.96 | **L**:14.69 <br> **C**:11.50 | **L**:12.72 <br> **C**:12.47 | **L**:9.76 <br> **C**:11.64 | **L**:8.89 <br> **C**:11.49 | **L**:9.95 <br> **C**:10.76 | N/A | **L**:10.37 <br> **C**:10.27 | **L**:10.89 <br> **C**:9.53 | N/A |  
 | AKAZE_BRISK_HOG_BF_NN | 0.876 | N/A | **L**:12.23 <br> **C**:14.72 | N/A | **L**:13.01 <br> **C**:14.82 | **L**:11.87 <br> **C**:13.68 | **L**:10.61 <br> **C**:15.45 | **L**:15.25 <br> **C**:16.49 | **L**:15.65 <br> **C**:13.99 | **L**:12.35 <br> **C**:13.62 | **L**:14.69 <br> **C**:11.98 | **L**:12.72 <br> **C**:12.57 | **L**:9.76 <br> **C**:11.65 | **L**:8.89 <br> **C**:10.20 | **L**:9.95 <br> **C**:10.38 | N/A | **L**:10.37 <br> **C**:10.51 | **L**:10.89 <br> **C**:9.14 | N/A |  
-| AKAZE_BRISK_BINARY_FLANN_NN | 0.866 | **L**:14.87 <br> **C**:12.87 | **L**:12.23 <br> **C**:14.85 | **L**:19.70 <br> **C**:13.34 | **L**:13.01 <br> **C**:14.80 | **L**:11.87 <br> **C**:14.07 | **L**:10.61 <br> **C**:15.30 | **L**:15.25 <br> **C**:16.67 | **L**:15.65 <br> **C**:13.69 | **L**:12.35 <br> **C**:14.02 | **L**:14.69 <br> **C**:12.02 | **L**:12.72 <br> **C**:12.90 | **L**:9.76 <br> **C**:11.70 | **L**:8.89 <br> **C**:10.16 | **L**:9.95 <br> **C**:9.84 | N/A | **L**:10.37 <br> **C**:10.54 | **L**:10.89 <br> **C**:9.36 | N/A |  
-| AKAZE_BRIEF_HOG_BF_NN | 0.861 | **L**:14.87 <br> **C**:14.49 | **L**:12.23 <br> **C**:16.94 | N/A | **L**:13.01 <br> **C**:14.57 | **L**:11.87 <br> **C**:15.87 | **L**:10.61 <br> **C**:15.06 | **L**:15.25 <br> **C**:16.70 | **L**:15.65 <br> **C**:14.92 | **L**:12.35 <br> **C**:17.03 | **L**:14.69 <br> **C**:12.48 | **L**:12.72 <br> **C**:12.83 | **L**:9.76 <br> **C**:10.90 | **L**:8.89 <br> **C**:12.47 | **L**:9.95 <br> **C**:11.15 | N/A | **L**:10.37 <br> **C**:10.81 | **L**:10.89 <br> **C**:10.21 | N/A |  
-| SHITOMASI_ORB_BINARY_BF_NN | 0.860 | N/A | **L**:12.23 <br> **C**:13.06 | N/A | **L**:13.01 <br> **C**:12.79 | **L**:11.87 <br> **C**:12.44 | **L**:10.61 <br> **C**:13.08 | **L**:15.25 <br> **C**:12.34 | **L**:15.65 <br> **C**:13.29 | **L**:12.35 <br> **C**:11.27 | **L**:14.69 <br> **C**:13.95 | **L**:12.72 <br> **C**:11.79 | N/A | **L**:8.89 <br> **C**:12.13 | **L**:9.95 <br> **C**:11.71 | **L**:7.77 <br> **C**:11.04 | **L**:10.37 <br> **C**:11.10 | **L**:10.89 <br> **C**:11.73 | N/A |  
-| FAST_FREAK_HOG_FLANN_KNN | 0.855 | N/A | **L**:12.23 <br> **C**:13.08 | N/A | **L**:13.01 <br> **C**:12.85 | **L**:11.87 <br> **C**:13.75 | **L**:10.61 <br> **C**:12.50 | **L**:15.25 <br> **C**:12.25 | **L**:15.65 <br> **C**:11.76 | **L**:12.35 <br> **C**:13.12 | **L**:14.69 <br> **C**:14.41 | **L**:12.72 <br> **C**:12.44 | N/A | **L**:8.89 <br> **C**:12.83 | **L**:9.95 <br> **C**:12.52 | **L**:7.77 <br> **C**:10.84 | **L**:10.37 <br> **C**:12.28 | **L**:10.89 <br> **C**:11.07 | N/A |  
-| AKAZE_BRISK_HOG_FLANN_NN | 0.849 | N/A | **L**:12.23 <br> **C**:15.43 | N/A | **L**:13.01 <br> **C**:14.80 | **L**:11.87 <br> **C**:13.28 | **L**:10.61 <br> **C**:14.62 | **L**:15.25 <br> **C**:17.43 | **L**:15.65 <br> **C**:14.38 | **L**:12.35 <br> **C**:13.85 | **L**:14.69 <br> **C**:11.92 | **L**:12.72 <br> **C**:12.98 | **L**:9.76 <br> **C**:11.75 | **L**:8.89 <br> **C**:10.26 | **L**:9.95 <br> **C**:10.34 | N/A | **L**:10.37 <br> **C**:10.43 | **L**:10.89 <br> **C**:9.15 | N/A |
+| AKAZE_BRISK_BINARY_FLANN_NN | 0.862 | **L**:14.87 <br> **C**:12.87 | **L**:12.23 <br> **C**:14.85 | **L**:19.70 <br> **C**:13.34 | **L**:13.01 <br> **C**:14.80 | **L**:11.87 <br> **C**:14.07 | **L**:10.61 <br> **C**:15.30 | **L**:15.25 <br> **C**:16.67 | **L**:15.65 <br> **C**:13.69 | **L**:12.35 <br> **C**:14.02 | **L**:14.69 <br> **C**:12.02 | **L**:12.72 <br> **C**:12.90 | **L**:9.76 <br> **C**:11.70 | **L**:8.89 <br> **C**:10.16 | **L**:9.95 <br> **C**:9.84 | N/A | **L**:10.37 <br> **C**:10.54 | **L**:10.89 <br> **C**:9.36 | N/A |  
+| AKAZE_BRIEF_HOG_BF_NN | 0.859 | **L**:14.87 <br> **C**:14.49 | **L**:12.23 <br> **C**:16.94 | N/A | **L**:13.01 <br> **C**:14.57 | **L**:11.87 <br> **C**:15.87 | **L**:10.61 <br> **C**:15.06 | **L**:15.25 <br> **C**:16.70 | **L**:15.65 <br> **C**:14.92 | **L**:12.35 <br> **C**:17.03 | **L**:14.69 <br> **C**:12.48 | **L**:12.72 <br> **C**:12.83 | **L**:9.76 <br> **C**:10.90 | **L**:8.89 <br> **C**:12.47 | **L**:9.95 <br> **C**:11.15 | N/A | **L**:10.37 <br> **C**:10.81 | **L**:10.89 <br> **C**:10.21 | N/A |  
+| SHITOMASI_ORB_BINARY_BF_NN | 0.859 | N/A | **L**:12.23 <br> **C**:13.06 | N/A | **L**:13.01 <br> **C**:12.79 | **L**:11.87 <br> **C**:12.44 | **L**:10.61 <br> **C**:13.08 | **L**:15.25 <br> **C**:12.34 | **L**:15.65 <br> **C**:13.29 | **L**:12.35 <br> **C**:11.27 | **L**:14.69 <br> **C**:13.95 | **L**:12.72 <br> **C**:11.79 | N/A | **L**:8.89 <br> **C**:12.13 | **L**:9.95 <br> **C**:11.71 | **L**:7.77 <br> **C**:11.04 | **L**:10.37 <br> **C**:11.10 | **L**:10.89 <br> **C**:11.73 | N/A |  
+| FAST_FREAK_HOG_FLANN_KNN | 0.854 | N/A | **L**:12.23 <br> **C**:13.08 | N/A | **L**:13.01 <br> **C**:12.85 | **L**:11.87 <br> **C**:13.75 | **L**:10.61 <br> **C**:12.50 | **L**:15.25 <br> **C**:12.25 | **L**:15.65 <br> **C**:11.76 | **L**:12.35 <br> **C**:13.12 | **L**:14.69 <br> **C**:14.41 | **L**:12.72 <br> **C**:12.44 | N/A | **L**:8.89 <br> **C**:12.83 | **L**:9.95 <br> **C**:12.52 | **L**:7.77 <br> **C**:10.84 | **L**:10.37 <br> **C**:12.28 | **L**:10.89 <br> **C**:11.07 | N/A |  
+| AKAZE_BRISK_HOG_FLANN_NN | 0.848 | N/A | **L**:12.23 <br> **C**:15.43 | N/A | **L**:13.01 <br> **C**:14.80 | **L**:11.87 <br> **C**:13.28 | **L**:10.61 <br> **C**:14.62 | **L**:15.25 <br> **C**:17.43 | **L**:15.65 <br> **C**:14.38 | **L**:12.35 <br> **C**:13.85 | **L**:14.69 <br> **C**:11.92 | **L**:12.72 <br> **C**:12.98 | **L**:9.76 <br> **C**:11.75 | **L**:8.89 <br> **C**:10.26 | **L**:9.95 <br> **C**:10.34 | N/A | **L**:10.37 <br> **C**:10.43 | **L**:10.89 <br> **C**:9.15 | N/A |
+
 
 For clarity of visualizations based on performance analysis done in the previous related project 
 [https://github.com/ser94mor/2d-feature-tracking](https://github.com/ser94mor/2d-feature-tracking) 
 the following combinations were selected for further analysis:
 - SHITOMASI_SIFT_HOG_FLANN_NN (clear winner in terms of accuracy)
-- AKAZE_BRISK_BINARY_FLANN_NN (AKAZE-detector is slow but BRISK-descriptor is fast & 
-  it is the only combination from the TOP-10 having estimate for the 3rd image)
+- AKAZE_BRISK_HOG_BF_NN       (AKAZE-detector is slow but BRISK-descriptor is fast)
 - SHITOMASI_ORB_BINARY_BF_NN  (ORB-descriptor is much faster than SIFT)
 - FAST_FREAK_HOG_FLANN_KNN    (the only FAST-detector in the TOP-10 )
 
@@ -164,7 +164,26 @@ LiDAR-based TTC estimates are the same for all the combinations.
 
 ![graph.png](pics/graph.png)  
 
-From the visual graph one can identify the LiDAR-derived TTC outlier for the image #3. 
+From the visual graph one cannot identify significant outliers, although the LiDAR-derived TTC estimations 
+look less stable. One can identify as outlier the LiDAR-based estimation at the image #15. Below are pictures 
+illustrating the top-down view of the LiDAR points and LiDAR points projected to the images #14 and #15.
+
+![outlier-14](pics/outlier-14.png)
+![outlier-15](pics/outlier-15.png)
+
+The root cause of the problem cannot be identified simply by looking onto the pictures. But 7.04 / ((7.13-7.04)/0.1) is, 
+indeed, equals ~7.8.
+
+Visually it is hard to choose the best (detector, descriptor, descriptor type, matcher, selector)  combination. 
+I personally like the trends of SHITOMASI_SIFT_HOG_FLANN_NN and SHITOMASI_ORB_BINARY_BF_NN. 
+The latter one look more realistic to me, 
+although it has lower score than the former. Another advantage of SHITOMASI_ORB_BINARY_BF_NN is that both 
+SHITOMASI detector and ORD descriptor are among the TOP-5 fastest detectors and descriptors as determined in 
+the previous related project 
+[https://github.com/ser94mor/2d-feature-tracking](https://github.com/ser94mor/2d-feature-tracking).
+
+The vehicle collision avoidance system should both be precise in its TTC estimations and work in real time, 
+so the combination **SHITOMASI_ORB_BINARY_BF_NN** seems like the most suitable.
 
 #### Building and Running
 
