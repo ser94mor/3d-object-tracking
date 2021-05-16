@@ -165,14 +165,27 @@ LiDAR-based TTC estimates are the same for all the combinations.
 ![graph.png](pics/graph.png)  
 
 From the visual graph one cannot identify significant outliers, although the LiDAR-derived TTC estimations 
-look less stable. One can identify as outlier the LiDAR-based estimation at the image #15. Below are pictures 
-illustrating the top-down view of the LiDAR points and LiDAR points projected to the images #14 and #15.
+look less stable. One can identify as outliers the LiDAR-based estimations at the images #6 and #15. Below are pictures 
+illustrating the top-down view of the LiDAR points and LiDAR points projected to the images #5 & #6 and #14 & #15.
+
+![outlier-5](pics/outlier-5.png)
+![outlier-6](pics/outlier-6.png)
+
+The root cause of the problem might be the way the outliers are rejected, that is, too many closest points 
+are ignored in the calculation of LiDAR-derived TTC (5 points are ignored).
+It is because 7.58 / ((7.64-7.58)/0.1) equals roughly 12.63 seconds while the LiDAR-based component
+produced an estimate equaling to ~10.61 seconds.
 
 ![outlier-14](pics/outlier-14.png)
 ![outlier-15](pics/outlier-15.png)
 
-The root cause of the problem cannot be identified simply by looking onto the pictures. But 7.04 / ((7.13-7.04)/0.1) is, 
-indeed, equals ~7.8.
+The root cause of the problem cannot be identified simply by looking onto the pictures. The LiDAR-derived TTC 
+calculation by hands gives 7.04 / ((7.13-7.04)/0.1) = ~7.82, while the LiDAR-based component 
+produced an estimate equaling to ~7.77. The number 7.82 is still considered by me as an outlier.
+
+It should be noted that the outlier-rejection mechanism implemented in the LiDAR-based component 
+helps to overcome many other outlier measurements, and the chosen component parameters are 
+the best among all those tried.
 
 Visually it is hard to choose the best (detector, descriptor, descriptor type, matcher, selector)  combination. 
 I personally like the trends of SHITOMASI_SIFT_HOG_FLANN_NN and SHITOMASI_ORB_BINARY_BF_NN. 
